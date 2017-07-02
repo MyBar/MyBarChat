@@ -80,5 +80,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, EMClientDelegate {
     func autoLoginDidCompleteWithError(_ aError: EMError!) {
         print("autoLoginDidCompleteWithError - \(aError)")
     }
+    
+    //EMClientDelegate中的方法，当前登录账号在其它设备登录时会接收到此回调
+    func userAccountDidLoginFromOtherDevice() {
+        
+        self.window?.rootViewController = MBLoginViewController()
+        
+        let alert = UIAlertController(title: "提醒", message: "当前帐号在其它设备登录，如非本人操作，请及时修改密码", preferredStyle: UIAlertControllerStyle.alert)
+        
+        let cancelAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.cancel, handler: nil)
+        
+        alert.addAction(cancelAction)
+        
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
 }
 

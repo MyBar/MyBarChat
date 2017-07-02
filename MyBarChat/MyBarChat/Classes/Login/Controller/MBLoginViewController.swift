@@ -20,7 +20,9 @@ class MBLoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        usernameTextField.text = self.lastLoginUsername
+        autoLoginSwitch.isOn = self.lastLoginIsAutoLogin
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -66,10 +68,51 @@ class MBLoginViewController: UIViewController {
                 //自动登录(内部会把用户名和密码保存到用户的偏好设置里)
                 EMClient.shared().options.isAutoLogin = self.autoLoginSwitch.isOn
                 
+                self.saveLastLoginUsername()
+                self.saveLastLoginIsAutoLogin()
+                
                 //进入主界面
                 self.view.window?.rootViewController = MBMainViewController()
             }
         }
     }
+    
+    
+    
+    private func saveLastLoginUsername() {
+        let username = EMClient.shared().currentUsername
+        if username != nil && (!username!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty) {
+            let userDefaults = UserDefaults.standard
+            userDefaults.set(username, forKey: "mb_lastLogin_username")
+            userDefaults.synchronize()
+        }
+    }
+    
+    private func saveLastLoginIsAutoLogin() {
+        let isAutoLogin = EMClient.shared().options.isAutoLogin
+        
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(isAutoLogin, forKey: "mb_lastLogin_isAutoLogin")
+        userDefaults.synchronize()
+    }
+    
+    private var lastLoginUsername : String? {
+        let userDefaults = UserDefaults.standard
+        let username = userDefaults.value(forKey: "mb_lastLogin_username") as? String
+        
+        if username != nil && (!username!.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty) {
+            return username
+        }
+
+        return nil
+    }
+    
+    private var lastLoginIsAutoLogin : Bool {
+        let userDefaults = UserDefaults.standard
+        let isAutoLogin = userDefaults.value(forKey: "mb_lastLogin_isAutoLogin") as? Bool
+        
+        return isAutoLogin ?? false
+    }
+    
 
 }

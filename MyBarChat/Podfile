@@ -10,6 +10,8 @@ target ‘MyBarChat' do
 
 # Pods for MyBarChat
 
+    pod 'EaseUI', :git => 'https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git', :tag => '3.3.2'
+
     pod 'Hyphenate'
 
     # pod 'FMDB', '~> 2.6.2'
